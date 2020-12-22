@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SecondViewControllerDelegate: class {
-    func updateLabels(clickscore : [Int])
+    func updateLabels(clickscore : Int)
 }
 
 class SecondViewController: UIViewController {
@@ -25,7 +25,7 @@ class SecondViewController: UIViewController {
     var isTimerOn = false
     var timeLeft = 5
     var clickCounter = 0
-    var clickCounterArray : [Int] = [0, 0, 0, 0, 0]
+    var highestScore = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +38,11 @@ class SecondViewController: UIViewController {
         // MARK: - Timer Start
         startTimer()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let userDefaults = UserDefaults.standard
+        highestScore = userDefaults.integer(forKey: "key")
+    }
     // MARK: - Functions
     @IBAction func buttonClick(_ sender: Any) {
         
@@ -48,15 +53,15 @@ class SecondViewController: UIViewController {
         
         isTimerOn = true
         if isTimerOn && timeLeft != 0 {
-            timer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(updatetimerLabel), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updatetimerLabel), userInfo: nil, repeats: true)
         }
     }
     
     func calculateHighestClick () {
-        clickCounterArray.append(clickCounter)
-        clickCounterArray.sort(by: {$0 > $1})
+        if clickCounter > highestScore {
+            highestScore = clickCounter
+        }
     }
-    
     
     @objc func updatetimerLabel() {
         
@@ -69,14 +74,25 @@ class SecondViewController: UIViewController {
             timer?.invalidate()
             timer = nil
             let alertNewHighscore = UIAlertController(title: "Game Over", message: "Your time is done!", preferredStyle: .alert)
-            alertNewHighscore.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.updateLabels(clickScore: self.clickCounterArray)}))
+            updateLabels(clickScore: self.clickCounter)
+            savingHighScore()
+            alertNewHighscore.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in self.goToFirstVC()}))
             self.present(alertNewHighscore, animated: true)
             
         }
     }
-    func updateLabels (clickScore : [Int]){
-        
-        self.delegate?.updateLabels(clickscore : clickCounterArray)
+    
+    func updateLabels (clickScore : Int){
+        self.delegate?.updateLabels(clickscore : highestScore)
+    }
+    
+    func goToFirstVC () {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func savingHighScore()  {
+        let savedScore = highestScore
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(savedScore, forKey: "key")
     }
 }

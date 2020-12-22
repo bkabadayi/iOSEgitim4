@@ -10,6 +10,7 @@
 //
 
 import UIKit
+import Foundation
 
 
 class ViewController: UIViewController, SecondViewControllerDelegate {
@@ -26,8 +27,9 @@ class ViewController: UIViewController, SecondViewControllerDelegate {
     @IBOutlet weak var fifthLabel: UILabel!
     @IBOutlet weak var gameIntro: UILabel!
     
-    var clickCounterArray : [Int] = [0, 0, 0, 0, 0]
-
+//    let targetSavings = "targetSavings"
+//    let userDefaults = UserDefaults()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,18 +60,31 @@ class ViewController: UIViewController, SecondViewControllerDelegate {
         startButton.layer.cornerRadius = 15
         startButton.layer.masksToBounds = true
         
+//        if let counterSave = userDefaults.value(forKey: targetSavings) as? String {
+//            firstLabel.text = counterSave
+        }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let userDefaults = UserDefaults.standard
+        let value = userDefaults.integer(forKey: "key")
+        firstLabel.text = "1- \(value) click in 60 sec"
     }
+    
     @IBAction func startButtonClicked(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let secondViewController = storyboard.instantiateViewController(identifier: "SecondViewController") as! SecondViewController
         secondViewController.delegate = self
         self.navigationController?.pushViewController(secondViewController, animated: true)
     }
-    func updateLabels(clickscore : [Int]) {
-        firstLabel.text = "1 - \(clickscore[0]) click in 60 sec"
-        secondLabel.text = "2 - \(clickscore[1]) click in 60 sec"
-        thirdLabel.text = "3 - \(clickscore[2]) click in 60 sec"
-        fourthLabel.text = "4 - \(clickscore[3]) click in 60 sec"
-        fifthLabel.text = "5 - \(clickscore[4]) click in 60 sec"
+    
+    func updateLabels(clickscore : Int) {
+        firstLabel.text = "1- \(clickscore) click in 60 sec"
     }
+    
+//    func saveUpdateLabels () {
+//        userDefaults.setValue(firstLabel.text, forKey: targetSavings)
+//        userDefaults.synchronize()
+//        firstLabel.resignFirstResponder()
+//    }
 }
+
