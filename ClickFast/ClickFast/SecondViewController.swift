@@ -23,7 +23,7 @@ class SecondViewController: UIViewController {
     
     var timer: Timer?
     var isTimerOn = false
-    var timeLeft = 5
+    var timeLeft = 60
     var clickCounter = 0
     var highestScore = 0
     
