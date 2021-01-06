@@ -12,7 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        Thread.sleep(forTimeInterval: 4.0)
+        Thread.sleep(forTimeInterval: 2.5)
         let defaults = UserDefaults.standard
         let defaultValue = ["firstLabel.text" : ""]
         defaults.register(defaults: defaultValue)
